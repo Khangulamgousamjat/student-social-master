@@ -1,6 +1,10 @@
-import * as admin from "firebase-admin";
+import admin from "firebase-admin";
+import { getApps, initializeApp, cert } from "firebase-admin/app";
+import { getAuth } from "firebase-admin/auth";
+import { getFirestore } from "firebase-admin/firestore";
+import { getMessaging } from "firebase-admin/messaging";
 
-if (!admin.apps.length) {
+if (!getApps().length) {
   try {
     const serviceAccountKey = process.env.FIREBASE_SERVICE_ACCOUNT_KEY;
     if (serviceAccountKey) {
@@ -8,12 +12,12 @@ if (!admin.apps.length) {
         ? JSON.parse(serviceAccountKey) 
         : serviceAccountKey;
 
-      admin.initializeApp({
-        credential: admin.credential.cert(serviceAccount),
+      initializeApp({
+        credential: cert(serviceAccount),
         storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
       });
-    } else {
-      admin.initializeApp({
+    } else if (process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID) {
+      initializeApp({
         projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
       });
     }
@@ -22,6 +26,6 @@ if (!admin.apps.length) {
   }
 }
 
-export const adminAuth = admin.apps.length ? admin.auth() : null;
-export const adminDb = admin.apps.length ? admin.firestore() : null;
-export const adminMessaging = admin.apps.length ? admin.messaging() : null;
+export const adminAuth = getApps().length ? getAuth() : null;
+export const adminDb = getApps().length ? getFirestore() : null;
+export const adminMessaging = getApps().length ? getMessaging() : null;

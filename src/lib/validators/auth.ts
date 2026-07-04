@@ -3,10 +3,10 @@ import { z } from "zod";
 export const registerSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   email: z.string().email("Invalid email address"),
-  password: z.string().min(8, "Password must be at least 8 characters"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
   college: z.string().optional(),
   department: z.string().optional(),
-  year: z.number().int().min(1).max(5).optional(),
+  year: z.preprocess((val) => (val === "" || val === undefined || val === null ? undefined : Number(val)), z.number().int().min(1).max(10).optional()),
 });
 
 export const loginSchema = z.object({
@@ -20,5 +20,5 @@ export const forgotPasswordSchema = z.object({
 
 export const resetPasswordSchema = z.object({
   token: z.string().min(1, "Reset token is required"),
-  password: z.string().min(8, "Password must be at least 8 characters"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
 });
