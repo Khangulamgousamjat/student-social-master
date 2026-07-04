@@ -44,3 +44,4 @@ Models include `User`, `Post` (media + tags + visibility), `Comment` (nested), `
 - Create migrations for production: `npm run db:migrate`
 - Rerun seeds safely with `npm run db:seed` (data is reset inside the script)
 - Keep `.env` out of version control; use Vercel project envs for deploy.
+
